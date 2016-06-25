@@ -108,6 +108,7 @@ export default class App extends Vue {
 		let mute = false
 
 		let actionDelay = ACTION_DELAY
+		
 
 		let trackTime = convertMillsecond(cut.actionStart)
 		let dollyDelay = convertMillsecond(cut.inPoint - cut.actionStart - DOLLY_ACCTIME)
