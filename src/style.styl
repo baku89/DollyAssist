@@ -18,7 +18,7 @@ uniform-centerize()
 // 			{block}
 
 mobile()
-	@media only screen and (max-width: 640px)
+	@media only screen and (max-width: 900px)
 		{block}
 
 .mq
@@ -33,198 +33,143 @@ mobile()
 	box-sizing: border-box
 	outline none
 
-::selection,
-::-moz-selection,
-::-webkit-selection
-	background white
-
-[v-cloak]
-	visibility hidden
-
-.center
-	position fixed
-	left 50%
-	top 0
-	width 1px
-	height 100%
-	background-color white
-	// opacity 0
-	z-index: 99
-
-
-.center-h
-	position fixed
-	left 0
-	top 50%
-	width 100%
-	height 1px
-	background-color white
-	// opacity 0
-	z-index: 99
-
 html, body
 	width 100%
 	height 100%
-	height 100vh
 
 html
-	font-family: "liberation-sans", Helvetica, "游ゴシック体", "Yu Gothic", YuGothic, sans-serif
+	font-family: Helvetica, "游ゴシック体", "Yu Gothic", YuGothic, sans-serif
 	font-smoothing antialiased
 	-moz-osx-font-smoothing: grayscale
-	font-size 18px
-
-	+mobile()
-		font-size 16px
+	font-size 12px
 
 body
 	background black
 	color white
-	line-height 2.2
 
-	+mobile()
-		display block
-		line-height 1.8
+//--------------------------------------------------
+// tab
 
-a
-	cursor pointer
-	text-decoration none
-	box-shadow inset 0 -2px 0 white
-
-	&:link, &:visited
-		color white
-
-	&:hover
-		background-color white
-
-	&:focus
-		background-color transparent
-
-	// .mobile &
-	// 	background-color transparent !important
-
-	&.inv
-		&, &:link, &:visited
-			background-color white
-			box-shadow none
-			margin-left 0.15em
-			margin-right 0.1em
-
-			// .mobile &
-			// 	box-shadow inset 0 -2px 0 white
-
-		&:hover,
-		&.active
-			background-color transparent
-
-.content
-	max-width 46rem
-	margin 0 auto
-	padding 2rem 0.4rem
-	text-align center
-	// text-align justify
-	// word-break keep-all
-
-	.mobile &
-		padding-top 100vh
-
-
-	+mobile()
-		text-align justify
-		// word-break break-all
-		// padding-bottom 0
-
-.background
+.tab
 	position fixed
+	bottom 0
+	width 100%
+	background gray
+	font-size 1.4rem
+	padding 0.5rem 0
+	display flex
+	z-index 99
+
+	div
+		margin 0 1rem
+		cursor pointer
+
+.page
+	position absolute
 	top 0
 	left 0
-	width 100%
-	height 100%
-	z-index -10
-	background-size cover
-	background-position 50% 50%
-	opacity 0.7
-	transition opacity .2s ease
-
-	&.hidden
-		opacity 0
-
+	right 0
+	bottom 0
+	overflow scroll
+	background black
 
 //--------------------------------------------------
-// title
+// table
 
-.page-wrapper
-	height 100%
+.highlight
+	background red
 
-	.centerize &
-		uniform-centerize()
+//--------------------------------------------------
+// detail
+
+$cell-padding = 1.2em
+
+.detail
+	border-left 1px solid white
+	border-top 1px solid white
+	font-size 2rem
+
+	+mobile()
+		font-size 1rem
+
+	.cell
+		padding 0.6em 0.3em
+		border-right 1px solid white
+		border-bottom 1px solid white
+
+	span
+		color #333
+		padding-right .3em
+
+// cut
+.cut
+	display flex
+.cut__number
+	flex-grow 1
+	font-size 3em
+	text-align center
+.cut__title
+	flex-grow 4
+.cut__name
+	font-size 2em
+.cut__set-type
+	flex-grow 2
+	font-size 3em
+
+// range
+.range
+	display flex
+	font-size 2em
+.range__inout
+	flex-grow 3
+.range__duration
+	flex-grow 2
+
+// member
+.member
+	display flex
+	text-align center
+.member__one
+	flex-grow 1
+.member__value
+	font-size 1.5em
+	line-height 2em - $cell-padding
+	height 2em
+
+// text
+.text
+	display flex
+	align-items stretch
+.text__one
+	flex-grow 1
+.text__title
+	text-align center
+.text__value
+	height 10em
+
+//--------------------------------------------------
+// action
 
 
-.title-wrapper
 
-	.mobile &
-		position absolute
-		top 0
-		left 0
-		width 100vw
-		height 100vh
-		uniform-centerize()
-		transition height .4s ease
-		// background red
-
-.title
-	width 10em
+button.action__action
+	text-align: center
+	font-size 8rem
+	width 6em
 	margin 0 auto
-	position relative
 
-	.mobile &
-		width 9rem
-		margin-top 1.6rem
+//--------------------------------------------------
+// action
 
-.title__text
+.centerize-panel
 	position absolute
-	visibility hidden
-
-.title__logo
-	position relative
-	left -10%
-	width 100%
-	height auto
+	top 0
+	left 0
+	right 0
+	bottom 0
+	uniform-centerize()
 
 
-//--------------------------------------------------
-// section
-
-hgroup
-	margin-bottom 3rem
-	// background red
-
-p
-	margin-bottom 2rem
-
-	&.right
-		font-size 0.8rem
-		text-align right
-
-$split-width=1.5rem
-
-.split
-	height 1px
-	width $split-width * 4rem
-	margin-bottom 2rem
-	border 0
-	background-color transparent
-	background-image linear-gradient(to right, transparent 25%, white 25%, white 75%, transparent 75%)
-	background-size $split-width 100%
-	background-repeat repeat-x
-
-
-	+mobile()
-		margin-left 0rem
-
-//--------------------------------------------------
-// contact
-
-address
-	+mobile()
-		margin-bottom 4rem
-		font-size 0.9rem
+.shooting__count
+	margin 0 auto
+	font-size 24rem

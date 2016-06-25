@@ -1,169 +1,95 @@
-import MobileDetect from 'mobile-detect'
-import $ from 'jquery'
-import 'jquery-touch-events'
-import Vue from 'Vue'
+/* global createjs */
 
-const IS_MOBILE = new MobileDetect(window.navigator.userAgent).mobile() != null
+const BPM = 76.8
 
-// const DEFAULT_THUMB = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
+import csv2array from 'csv2array'
+import App from './app.js'
 
-if (IS_MOBILE) {
-	$('html').addClass('mobile')
+window.__loader = {}
+
+function isUtilRow(row) {
+
+	for (let i = 1; i < row.length; i++) {
+		if (row[i] != '') {
+			return false
+		}
+	}
+
+	return true
 }
 
-class App extends Vue {
-
-	constructor() {
-
-		let data = JSON.parse(document.getElementById('works-data').innerText)
-
-		super({
-			el: 'body',
-			data: {
-
-				// data
-				categories: data.categories,
-				works: data.works,
-				members: data.members,
-
-				// layout
-				portrait: false,
-				titleHeight: null,
-				backgroundHeight: 'inherit',
-				backgroundHidden: false,
-				contentOverflow: true,
-
-				// active
-				active: {
-					object: null,
-					thumb: '',
-					thumbPortrait: '',
-					categories: [],
-					works: [],
-					members: []
-				}
-
-			}
-		})
-
-		this.$window = $(window)
-		this.$content = $('.content')
-
-		this.thumbLoaded = {
-			normal: false,
-			portrait: false
-		}
-
-		$(window).on({
-			'resize': this.onResize.bind(this),
-			'scroll': this.onScroll.bind(this),
-			'click tap': this.onWindowClick.bind(this)
-		}).trigger('resize')
-
-	}
-
-	// --------------------------------------------------
-	// window events
-
-	onResize() {
-		this.$data.portrait = window.innerWidth / window.innerHeight < 0.72
-		this.$data.contentOverflow = window.innerHeight < this.$content.outerHeight()
-
-		if (IS_MOBILE) {
-			this.$data.titleHeight = `${window.innerHeight}px`
-			this.$data.backgroundHeight = `${window.screen.availHeight}px`
-		}
-
-		this.preloadThumbs()
-	}
-
-	onScroll() {
-		this.$data.backgroundHidden = this.$window.scrollTop() < window.innerHeight * 0.4
-	}
-
-	onWindowClick(e) {
-		// console.log(e.target.tagName.toLowerCase())
-		if (e.target.tagName.toLowerCase() != 'a') {
-			this.onMouseleave()
-		}
-
-		// if (e.target.tagName != 'a'
-	}
-
-	// --------------------------------------------------
-	// preload
-	preloadThumbs() {
-
-		// portrait
-		if (this.$data.portrait) {
-			if (this.thumbLoaded.portrait) return
-			this.thumbLoaded.portrait = true
-			console.log('load portrait')
-
-		// normal
-		} else {
-			if (this.thumbLoaded.normal) return
-			this.thumbLoaded.normal = true
-			console.log('load normal')
-		}
-
-		// preload iamges
-		let remaining = this.$data.works.length
-		this.$data.works.forEach((work) => {
-			let thumb = this.$data.portrait ? (work.thumb_portrait || work.thumb) : work.thumb
-			let img = new Image()
-			img.src = thumb
-			img.onload = () => {
-				if (--remaining == 0) console.log('loaded')
-			}
-		})
-	}
-
-
-	// --------------------------------------------------
-	// vue events
-	onHoverCategory(category) {
-		this.active.works = category.works
-		this.active.members = category.members
-	}
-
-	onHoverWork(work) {
-		this.active.thumb = work.thumb
-		this.active.thumbPortrait = work.thumb_portrait || work.thumb
-		this.active.categories = work.categories
-		this.active.members = work.members
-	}
-
-	onHoverMember(member) {
-		this.active.works = member.works
-		this.active.categories = member.categories
-	}
-
-	// for mobile
-	onClickLink(item, e) {
-		// console.log('clicked!!!', this.active.object, item)
-		if (IS_MOBILE && this.active.object != item) {
-			// console.log('prevent!!')
-			e.preventDefault()
-		}
-		this.active.object = item
-	}
-
-	onMouseleave() {
-		this.active.thumb = ''
-		this.active.thumbPortrait = ''
-		this.active.categories = []
-		this.active.works = []
-		this.active.members = []
-	}
-
-	showThumb(url) {
-		this.active.thumb = url
-	}
-	clearThumb() {
-		this.active.thumb = ''
-	}
+function toInt(value) {
+	return parseInt(value) || '-'
 }
 
+function formatCutsTable(table) {
 
-new App()
+	table.splice(0, 1)
+	let cuts = []
+
+	table.forEach((row) => {
+		if (isUtilRow(row)) return
+
+		cuts.push({
+			'name': row[0],
+			'inPoint': toInt(row[1]),
+			'outPoint': toInt(row[2]),
+			'duration': toInt(row[3]),
+			'actionStart': toInt(row[5]),
+			'sync': row[6] == 'o',
+			'setType': row[7],
+			'member': {
+				'sato': row[8] == 'o',
+				'waga': row[10] == 'o',
+				'kevin': row[11] == 'o',
+				'towana': row[9] == 'o'
+			},
+			'description': row[12],
+			'memo': row[13],
+			'hs': row[14] == 'o',
+			'extra': row[15] == 'o',
+			'still': row[16] == 'o'
+		})
+	})
+
+	return cuts
+
+}
+
+let loadCuts = $.ajax({
+	url: './data/cuts.csv',
+	success: (data) => {
+		let table = csv2array(data)
+		window.__loader.cuts = formatCutsTable(table)
+	}
+})
+
+function loadSound() {
+	let d = $.Deferred()
+
+	let sounds = {
+		path: './data/',
+		manifest: [
+			{id: 'track', src: {mp3: 'track.mp3'}},
+			{id: 'click', src: {mp3: 'click.mp3'}}
+		]
+	}
+
+	createjs.Sound.alternateExtensions = ['mp3']
+	createjs.Sound.addEventListener('fileload', onFileload)
+	createjs.Sound.registerSounds(sounds)
+
+	function onFileload(evt) {
+		window.__loader.track = createjs.Sound.createInstance('track')
+		d.resolve()
+	}
+
+	return d.promise()
+
+}
+
+$.when(loadCuts, loadSound()).done(() => {
+
+	console.log('aa')
+	new App()
+})

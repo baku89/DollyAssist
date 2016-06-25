@@ -3,8 +3,114 @@ html
 	head
 		meta(charset='utf-8')
 		meta(name='viewport' content='width=device-width,initial-scale=1.0')
+		
+		link(rel="stylesheet" type="text/css" href="./css/pure-min.css")
+		link(rel="stylesheet" type="text/css" href="./style.css")
+		
 		title "calling" Script
 	
 	body
 	
-		script(src="./index.js")
+		header.tab
+			div(@click='mode = "table"') TABLE
+			div(@click='mode = "detail"') DETAIL
+			div(@click='mode = "action"') ACTION
+	
+		section.page(v-show='mode == "table"')
+			table.pure-table.pure-table-bordered
+				thead
+					tr
+						th #
+						th CUT
+						th In
+						th Out
+						th Duration
+						th Action
+						th Sync
+						th SET
+						th s
+						th t
+						th w
+						th k
+						th DESCRIPTION
+						th MEMO 
+						th HS
+						th EX
+						th STILL
+				
+				tbody
+					tr(v-for='cut in cuts' @click='changeCut($index)' v-bind:class='{"highlight": current == $index}')
+						td {{$index}}
+						td {{cut.name}}
+						td {{cut.inPoint | timecode}}
+						td {{cut.outPoint | timecode}}
+						td {{cut.duration | seconds}}
+						td {{cut.actionStart | timecode}}
+						td {{cut.sync | bool}}
+						td {{cut.setType}}
+						td {{cut.member.sato | bool}}
+						td {{cut.member.waga | bool}}
+						td {{cut.member.kevin | bool}}
+						td {{cut.member.towana | bool}}
+						td {{cut.description}}
+						td {{cut.memo}}
+						td {{cut.hs | bool}}
+						td {{cut.extra | bool}}
+						td {{cut.still | bool}}
+		
+		section.page.detail(v-show='mode == "detail"')
+		
+			.cut
+				.cut__number.cell {{ "#" + current }}
+				.cut__title
+					.cut__name.cell
+						span NAME
+						| {{ cuts[current].name }}
+					.cut__lyric.cell
+						span LYRIC
+						| {{ cuts[current].name }}
+				.cut__set-type.cell
+					span SET:
+					| {{ cuts[current].setType }}
+			
+			.range
+				.range__inout.cell
+					span TIME
+					| {{ cuts[current].inPoint | timecode }} ~ {{ cuts[current].outPoint | timecode }}
+				.range__duration.cell
+					span DURATION
+					| {{ cuts[current].duration | seconds }}
+			
+			.member
+				.member__one
+					.member__name.cell sato
+					.member__value.cell {{ cuts[current].member.sato | bool }}
+				.member__one
+					.member__name.cell waga
+					.member__value.cell {{ cuts[current].member.waga | bool }}
+				.member__one
+					.member__name.cell kevin
+					.member__value.cell {{ cuts[current].member.kevin | bool }}
+				.member__one
+					.member__name.cell towana
+					.member__value.cell {{ cuts[current].member.towana | bool }}
+			
+			.text 
+				.text__one
+					.text__title.cell DESCRIPTION
+					.text__value.cell {{ cuts[current].description }}
+				.text__one
+					.text__title.cell MEMO
+					.text__value.cell {{ cuts[current].memo }}
+
+		section.page.action(v-show='mode == "action"')
+		
+			.centerize-panel(v-show='!shooting')
+				button.pure-button.action__action(@click.prevent='startAction()') ACTION
+			
+			.centerize-panel.shooting(v-show='shooting')
+				.shooting__count 
+	
+		script(src="./js/preloadjs-0.6.2.min.js")
+		script(src="./js/soundjs-0.6.2.min.js")
+		script(src="./js/index.js")
