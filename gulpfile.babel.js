@@ -5,21 +5,16 @@ const $ = require('gulp-load-plugins')()
 const webpack = require('webpack')
 const WebpackStream = require('webpack-stream')
 const BrowserSync = require('browser-sync')
-const ftp = require('vinyl-ftp')
-const runSequence = require('run-sequence')
 const browserSync = BrowserSync.create()
 
-import ftpConfig from './ftp.config.js'
-
 let developmentMode = true
-let isDeployRoot = process.argv[3] == '-r'
 
 process.env.NODE_ENV = 'dev'
 
-function requireUncached($module) {
+/*function requireUncached($module) {
 	delete require.cache[require.resolve($module)]
 	return require($module)
-}
+}*/
 
 //==================================================
 gulp.task('webpack', () => {
@@ -48,10 +43,10 @@ gulp.task('webpack', () => {
 gulp.task('jade', () => {
 	return gulp.src('./src/*.jade')
 		.pipe($.plumber())
-		.pipe($.data(() => {
-			return requireUncached('./src/jade/data.json')
-		}))
-		.pipe($.shell(['node ./add-relations-to-works.js']))
+		// .pipe($.data(() => {
+		// 	return requireUncached('./src/jade/data.json')
+		// }))
+		// .pipe($.shell(['node ./add-relations-to-works.js']))
 		.pipe($.jade({pretty: developmentMode}))
 		.pipe(gulp.dest('public'))
 		.pipe(browserSync.stream())
@@ -87,35 +82,5 @@ gulp.task('watch', () => {
 })
 
 //==================================================
-gulp.task('release', () => {
-	developmentMode = false
-	process.env.NODE_ENV = 'production'
-})
-
-//==================================================
-gulp.task('deploy', () => {
-
-	if (isDeployRoot) {
-		$.util.log('Upload to root directory')
-	}
-
-	let conn = ftp.create(ftpConfig)
-
-	let globs = ['./public/**']
-	let remotePath = isDeployRoot ? '/ins-stud.io/public_html' : '/ins-stud.io/public_html/studio'
-
-	return gulp.src(globs, {base: './public', buffer: false})
-		.pipe( conn.newer(remotePath) )
-		.pipe( conn.dest(remotePath) )
-})
-
-//==================================================
 
 gulp.task('default', ['webpack', 'jade', 'stylus', 'watch', 'browser-sync'])
-gulp.task('build', () => {
-	runSequence(
-		'release',
-		['jade', 'stylus', 'webpack'],
-		'deploy'
-	)
-})
