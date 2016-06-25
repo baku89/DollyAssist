@@ -1,4 +1,4 @@
-# INS Studio
+# Shooting System for fhána - "calling"
 
 ```
 npm install
