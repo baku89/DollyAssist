@@ -90,6 +90,20 @@
           <div class="member__value cell">{{ cuts[current].member.towana | bool }}</div>
         </div>
       </div>
+      <div class="member">
+        <div class="member__one">
+          <div class="member__name cell">HS</div>
+          <div class="member__value cell">{{ cuts[current].hs | bool }}</div>
+        </div>
+        <div class="member__one">
+          <div class="member__name cell">STILL</div>
+          <div class="member__value cell">{{ cuts[current].still | bool }}</div>
+        </div>
+        <div class="member__one">
+          <div class="member__name cell">MUTE</div>
+          <div class="member__value cell">{{ cuts[current].mute | bool }}</div>
+        </div>
+      </div>
       <div class="text"> 
         <div class="text__one">
           <div class="text__title cell">DESCRIPTION</div>
@@ -107,6 +121,7 @@
       </div>
       <div v-show="shooting" class="centerize-panel shooting">
         <div class="shooting__count"> </div>
+        <div class="shooting__progress"></div>
       </div>
     </section>
     <script src="./js/preloadjs-0.6.2.min.js"></script>

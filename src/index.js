@@ -28,7 +28,7 @@ function formatCutsTable(table) {
 	let cuts = []
 
 	table.forEach((row) => {
-		if (isUtilRow(row)) return
+		if (isUtilRow(row) || row[17] == 'o') return
 
 		cuts.push({
 			'name': row[0],
@@ -48,7 +48,9 @@ function formatCutsTable(table) {
 			'memo': row[13],
 			'hs': row[14] == 'o',
 			'extra': row[15] == 'o',
-			'still': row[16] == 'o'
+			'still': row[16] == 'o',
+			'skip': row[17] == 'o',
+			'mute': row[18] == 'o'
 		})
 	})
 
@@ -79,7 +81,7 @@ function loadSound() {
 	createjs.Sound.addEventListener('fileload', onFileload)
 	createjs.Sound.registerSounds(sounds)
 
-	function onFileload(evt) {
+	function onFileload() {
 		window.__loader.track = createjs.Sound.createInstance('track')
 		d.resolve()
 	}

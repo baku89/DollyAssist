@@ -94,6 +94,17 @@ html
 				.member__one
 					.member__name.cell towana
 					.member__value.cell {{ cuts[current].member.towana | bool }}
+					
+			.member
+				.member__one
+					.member__name.cell HS
+					.member__value.cell {{ cuts[current].hs | bool }}
+				.member__one
+					.member__name.cell STILL
+					.member__value.cell {{ cuts[current].still | bool }}
+				.member__one
+					.member__name.cell MUTE
+					.member__value.cell {{ cuts[current].mute | bool }}
 			
 			.text 
 				.text__one
@@ -110,6 +121,7 @@ html
 			
 			.centerize-panel.shooting(v-show='shooting')
 				.shooting__count 
+				.shooting__progress
 	
 		script(src="./js/preloadjs-0.6.2.min.js")
 		script(src="./js/soundjs-0.6.2.min.js")

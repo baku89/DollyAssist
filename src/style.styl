@@ -150,16 +150,11 @@ $cell-padding = 1.2em
 //--------------------------------------------------
 // action
 
-
-
 button.action__action
 	text-align: center
 	font-size 8rem
 	width 6em
 	margin 0 auto
-
-//--------------------------------------------------
-// action
 
 .centerize-panel
 	position absolute
@@ -169,7 +164,22 @@ button.action__action
 	bottom 0
 	uniform-centerize()
 
+//--------------------------------------------------
+// shooting
+
 
 .shooting__count
 	margin 0 auto
 	font-size 24rem
+
+.shooting__progress
+	position absolute
+	top 0
+	left 0
+	width 100%
+	height 100%
+	background white
+	transform-origin: top right
+	transform translateX(100%)
+	z-index 20
+	mix-blend-mode difference
