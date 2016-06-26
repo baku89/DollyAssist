@@ -42,10 +42,10 @@ html
 					tr(v-for='cut in cuts' @click='changeCut($index)' v-bind:class='{"highlight": current == $index}')
 						td {{$index}}
 						td {{cut.name}}
-						td {{cut.inPoint | timecode}}
-						td {{cut.outPoint | timecode}}
+						td {{cut.inPoint | frames}}
+						td {{cut.outPoint | frames}}
 						td {{cut.duration | seconds}}
-						td {{cut.actionStart | timecode}}
+						td {{cut.actionStart | frames}}
 						td {{cut.sync | bool}}
 						td {{cut.setType}}
 						td {{cut.member.sato | bool}}
@@ -59,6 +59,10 @@ html
 						td {{cut.still | bool}}
 		
 		section.page.detail(v-show='mode == "detail"')
+		
+			.table-nav
+				button.table-nav__prev.pure-button(@click='decrementCut()') PREV
+				button.table-nav__next.pure-button(@click='incrementCut()') NEXT
 		
 			.cut
 				.cut__number.cell {{ "#" + current }}
@@ -116,12 +120,21 @@ html
 
 		section.page.action(v-show='mode == "action"')
 		
+		
 			.centerize-panel(v-show='!shooting')
 				button.pure-button.action__action(@click.prevent='startAction()') ACTION
 			
 			.centerize-panel.shooting(v-show='shooting')
 				.shooting__count 
 				.shooting__progress
+				.shooting__start-bar(v-bind:style='{right: (accTime / dollyDuration * 100) + "%"}')
+				.shooting__center(v-bind:style='{right: (latterTime / dollyDuration * 100) + "%"}')
+				.shooting__frame {{ currentFrame }}
+				
+				
+				.shooting__quarter(v-bind:style='{right: (quarter1Time / dollyDuration * 100) + "%"}')
+				.shooting__quarter(v-bind:style='{right: (quarter3Time / dollyDuration * 100) + "%"}')
+				
 	
 		script(src="./js/preloadjs-0.6.2.min.js")
 		script(src="./js/soundjs-0.6.2.min.js")

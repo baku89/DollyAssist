@@ -28,7 +28,7 @@ function formatCutsTable(table) {
 	let cuts = []
 
 	table.forEach((row) => {
-		if (isUtilRow(row) || row[17] == 'o') return
+		if (isUtilRow(row)/* || row[17] == 'o'*/) return
 
 		cuts.push({
 			'name': row[0],

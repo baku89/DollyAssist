@@ -58,7 +58,7 @@ body
 	font-size 1.4rem
 	padding 0.5rem 0
 	display flex
-	z-index 99
+	z-index 200
 
 	div
 		margin 0 1rem
@@ -100,6 +100,15 @@ $cell-padding = 1.2em
 	span
 		color #333
 		padding-right .3em
+
+// table-nav
+.table-nav
+	display flex
+	justify-content: center
+
+	button
+		display block
+		margin 0.5em
 
 // cut
 .cut
@@ -167,10 +176,16 @@ button.action__action
 //--------------------------------------------------
 // shooting
 
+.shooting__frame
+	position absolute
+	right 2rem
+	bottom 4rem
+	font-size 3rem
 
 .shooting__count
 	margin 0 auto
-	font-size 24rem
+	font-size 48rem
+	z-index 101
 
 .shooting__progress
 	position absolute
@@ -183,3 +198,36 @@ button.action__action
 	transform translateX(100%)
 	z-index 20
 	mix-blend-mode difference
+
+	&[data-status=acc]
+		// background red
+
+	&[data-status=latter]
+		background orange
+
+.shooting__start-bar
+	position absolute
+	top 0
+	right 0
+	width 0
+	height 100%
+	border-right 6px solid red
+	z-index 100
+
+.shooting__center
+	position absolute
+	top 0
+	right 0
+	width 0
+	height 100%
+	border-right 6px solid orange
+	z-index 100
+
+.shooting__quarter
+	position absolute
+	top 0
+	right 0
+	width 0
+	height 100%
+	border-right 6px solid grey
+	z-index 100

@@ -40,10 +40,10 @@
           <tr v-for="cut in cuts" @click="changeCut($index)" v-bind:class="{&quot;highlight&quot;: current == $index}">
             <td>{{$index}}</td>
             <td>{{cut.name}}</td>
-            <td>{{cut.inPoint | timecode}}</td>
-            <td>{{cut.outPoint | timecode}}</td>
+            <td>{{cut.inPoint | frames}}</td>
+            <td>{{cut.outPoint | frames}}</td>
             <td>{{cut.duration | seconds}}</td>
-            <td>{{cut.actionStart | timecode}}</td>
+            <td>{{cut.actionStart | frames}}</td>
             <td>{{cut.sync | bool}}</td>
             <td>{{cut.setType}}</td>
             <td>{{cut.member.sato | bool}}</td>
@@ -60,6 +60,10 @@
       </table>
     </section>
     <section v-show="mode == &quot;detail&quot;" class="page detail">
+      <div class="table-nav">
+        <button @click="decrementCut()" class="table-nav__prev pure-button">PREV</button>
+        <button @click="incrementCut()" class="table-nav__next pure-button">NEXT</button>
+      </div>
       <div class="cut">
         <div class="cut__number cell">{{ "#" + current }}</div>
         <div class="cut__title">
@@ -122,6 +126,11 @@
       <div v-show="shooting" class="centerize-panel shooting">
         <div class="shooting__count"> </div>
         <div class="shooting__progress"></div>
+        <div v-bind:style="{right: (accTime / dollyDuration * 100) + &quot;%&quot;}" class="shooting__start-bar"></div>
+        <div v-bind:style="{right: (latterTime / dollyDuration * 100) + &quot;%&quot;}" class="shooting__center"></div>
+        <div class="shooting__frame">{{ currentFrame }}</div>
+        <div v-bind:style="{right: (quarter1Time / dollyDuration * 100) + &quot;%&quot;}" class="shooting__quarter"></div>
+        <div v-bind:style="{right: (quarter3Time / dollyDuration * 100) + &quot;%&quot;}" class="shooting__quarter"></div>
       </div>
     </section>
     <script src="./js/preloadjs-0.6.2.min.js"></script>
