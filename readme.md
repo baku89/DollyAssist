@@ -8,7 +8,7 @@ A tool for assisting a photographer to move the accurate position of dolly along
 
 ## Build
 
-Using gulp, Webpack, Babel, Jade Stylus, Vue.js and so on.
+Using gulp, Webpack, Babel, Jade, Stylus, Vue.js and so on.
 
 ```
 npm install
